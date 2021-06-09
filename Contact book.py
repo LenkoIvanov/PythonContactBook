@@ -1,4 +1,5 @@
 import csv
+from datetime import date
 
 class Contact: #class for basic contacts
     def __init__(self, name, number, birth, melody, mail):
@@ -9,6 +10,8 @@ class Contact: #class for basic contacts
         self.__mail = mail #personal email
     def getName(self):
         return self.__name
+    def getBirth(self):
+        return self.__birth
     def __str__(self):
         return "Name: " + self.__name + " Number: " + self.__number + " Email: " + self.__mail
 
@@ -40,7 +43,7 @@ class Friend(Contact): #class for friend contacts
         return super().__str__() + " Address: " + self.__address
     
 class Work(Contact): #class for work contacts
-    def __init__(self, name, birth, melody):
+    def __init__(self, name, number, birth, melody, mail):
         super().__init__(name, number, birth, melody, mail)
         self.__company = '' #company name
         self.__position = '' #job position (ex. software engineer, sysadmin)
@@ -72,7 +75,9 @@ def selectMelody():
 def createContactFamily(contactList):
     name = input("Enter name: ")
     number = input("Enter number: ")
-    birth = input("Enter birthdate: ")
+    birth = input("Enter birthdate (DD/MM): ")
+    if("/" not in birth):
+        birth = input("Wrong input! Enter birthdate again (DD/MM): ")
     melody = selectMelody()
     mail = input("Enter email address: ")
     familyContact = Family(name,number,birth,melody,mail)
@@ -85,7 +90,9 @@ def createContactFamily(contactList):
 def createContactFriend(contactList):
     name = input("Enter name: ")
     number = input("Enter number: ")
-    birth = input("Enter birthdate: ")
+    birth = input("Enter birthdate (DD/MM): ")
+    if("/" not in birth):
+        birth = input("Wrong input! Enter birthdate again (DD/MM): ")
     melody = selectMelody()
     mail = input("Enter email address: ")
     friendContact = Friend(name, number, birth, melody, mail)
@@ -96,7 +103,9 @@ def createContactFriend(contactList):
 def createContactWork(contactList):
     name = input("Enter name: ")
     number = input("Enter number: ")
-    birth = input("Enter birthdate: ")
+    birth = input("Enter birthdate (DD/MM): ")
+    if("/" not in birth):
+        birth = input("Wrong input! Enter birthdate again (DD/MM): ")
     melody = selectMelody()
     mail = input("Enter email address: ")
     workContact = Work(name, number, birth, melody, mail)
@@ -109,7 +118,9 @@ def createContactWork(contactList):
 def createContactOther(contactList):
     name = input("Enter name: ")
     number = input("Enter number: ")
-    birth = input("Enter birthdate: ")
+    birth = input("Enter birthdate (DD/MM): ")
+    if("/" not in birth):
+        birth = input("Wrong input! Enter birthdate again (DD/MM): ")
     melody = selectMelody()
     mail = input("Enter email address: ")
     contact = Contact(name, number, birth, melody, mail)
@@ -153,8 +164,20 @@ def printTxt(contactList, contactType):
             text = contact.__str__()
             file.write(str(text) + "\n")
         file.close()
-    
-            
+
+def remindBirthday(contactList):
+    today = date.today()
+    formatted = today.strftime("%d/%m")
+    name = input("Enter name of contact: ")
+    for contact in contactList:
+        currentName = contact.getName()
+        if(currentName == name):
+            birthday = contact.getBirth()
+            if(birthday == formatted):
+                print(name + " has a birthday today!")
+            else:
+                print(name + " does not have a birthday today.")
+                  
 def main():
     print("Enter a number to choose the action you wish to perform: \n",
           "1 - Add contact \n",
@@ -162,7 +185,8 @@ def main():
           "3 - Update contact \n",
           "4 - Set up a birthday reminder \n",
           "5 - Export contacts to a .txt file \n",
-          "6 - Export contact to a .csv file")
+          "6 - Export contacts to a .csv file \n",
+          "7 - Import contacts from a .csv file")
     number = int(input("Number: "))
     
     # lists to store all types of contacts
@@ -198,12 +222,20 @@ def main():
             else:
                 print("Wrong type!")
                 
-        elif(number == 3):
+        elif(number == 3): #info update
             pass
         
-        elif(number == 4):
-            pass
-        
+        elif(number == 4): #birthday reminders
+            contactType = input("Which contacts do you wish to check for a birthday? (family, friend, work or other): ")
+            if(contactType == "family"):
+                remindBirthday(family)
+            elif(contactType == "friend"):
+                remindBirthday(friends)
+            elif(contactType == "work"):
+                remindBirthday(work)
+            elif(contactType == "other"):
+                remindBirthday(others)
+                
         elif(number == 5): #print all contacts from list to .txt
             contactType = input("Which contacts do you wish to export to a .txt? (family, friend, work or other): ")
             if(contactType == "family"):
@@ -217,7 +249,10 @@ def main():
             else:
                 print("Wrong type!")
                 
-        elif(number == 6):
+        elif(number == 6): #export to .csv file
+            pass
+        
+        elif(number == 7): #import from .csv file
             pass
         
         else:
