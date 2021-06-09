@@ -9,6 +9,8 @@ class Contact: #class for basic contacts
         self.__mail = mail #personal email
     def getName(self):
         return self.__name
+    def __str__(self):
+        return "Name: " + self.__name + " Number: " + self.__number + " Email: " + self.__mail
 
 class Family(Contact): #class for family contacts
     def __init__(self, name, number, birth, melody, mail):
@@ -17,12 +19,14 @@ class Family(Contact): #class for family contacts
         self.__address = ''
     def setMember(self, role):
         self.__member = role
-    def getMembet(self):
+    def getMember(self):
         return self.__member
     def setAddress(self, address):
         self.__address = address
     def getAddress(self):
         return self.__address
+    def __str__(self):
+        return super().__str__() + " Address: " + self.__address + " Member: " + self.__member
 
 class Friend(Contact): #class for friend contacts
     def __init__(self, name, number, birth, melody, mail):
@@ -32,6 +36,8 @@ class Friend(Contact): #class for friend contacts
         self.__address = address
     def getAddress(self):
         return self.__address
+    def __str__(self):
+        return super().__str__() + " Address: " + self.__address
     
 class Work(Contact): #class for work contacts
     def __init__(self, name, birth, melody):
@@ -46,6 +52,8 @@ class Work(Contact): #class for work contacts
         self.__position = position
     def getJob(self):
         return self.__position
+    def __str__(self):
+        return super().__str__() + " Company: " + self.__company + " Position: " + self.__position
 
 def selectMelody():
     melodies = { 1: "Family melody",
@@ -56,10 +64,96 @@ def selectMelody():
           "1 - Family \n",
           "2 - Friend \n",
           "3 - Work \n",
-          "4 - Others \n")
+          "4 - Others")
     number = int(input("Enter a number between 1 or 4:"))
     chosenMelody = melodies.get(number)
     return chosenMelody
+
+def createContactFamily(contactList):
+    name = input("Enter name: ")
+    number = input("Enter number: ")
+    birth = input("Enter birthdate: ")
+    melody = selectMelody()
+    mail = input("Enter email address: ")
+    familyContact = Family(name,number,birth,melody,mail)
+    familyRole = input("Family member: ")
+    familyContact.setMember(familyRole)
+    address = input("Home adress: ")
+    familyContact.setAddress(address)
+    contactList.append(familyContact)
+    
+def createContactFriend(contactList):
+    name = input("Enter name: ")
+    number = input("Enter number: ")
+    birth = input("Enter birthdate: ")
+    melody = selectMelody()
+    mail = input("Enter email address: ")
+    friendContact = Friend(name, number, birth, melody, mail)
+    address = ("Enter address: ")
+    friendContact.setAddress(address)
+    contactList.append(friendContact)
+    
+def createContactWork(contactList):
+    name = input("Enter name: ")
+    number = input("Enter number: ")
+    birth = input("Enter birthdate: ")
+    melody = selectMelody()
+    mail = input("Enter email address: ")
+    workContact = Work(name, number, birth, melody, mail)
+    company = input("Enter company name: ")
+    workContact.setCompany(company)
+    job = input("Enter position at company: ")
+    workContact.setJob(job)
+    contactList.append(workContact)
+    
+def createContactOther(contactList):
+    name = input("Enter name: ")
+    number = input("Enter number: ")
+    birth = input("Enter birthdate: ")
+    melody = selectMelody()
+    mail = input("Enter email address: ")
+    contact = Contact(name, number, birth, melody, mail)
+    contactList.append(contact)
+
+def deleteContact(contactList):
+    name = input("Enter name of the contact you wish to delete: ")
+    if(not contactList):
+        print("There are no contacts in this list!")
+    else:
+        for contact in contactList:
+            currentName = contact.getName()
+            if(currentName == name):
+                contactList.remove(contact)
+                print("Deletion successful!")
+            else:
+                print("There is no such contact!")
+                
+def printTxt(contactList, contactType):
+    if(contactType == "family"):
+        file = open("Family.txt", "w")
+        for contact in contactList:
+            text = contact.__str__()
+            file.write(str(text) + "\n")
+        file.close()
+    elif(contactType == "friend"):
+        file = open("Friends.txt", "w")
+        for contact in contactList:
+            text = contact.__str__()
+            file.write(str(text) + "\n")
+        file.close()
+    elif(contactType == "work"):
+        file = open("Work.txt", "w")
+        for contact in contactList:
+            text = contact.__str__()
+            file.write(str(text) + "\n")
+        file.close()
+    elif(contactType == "other"):
+        file = open("Others.txt", "w")
+        for contact in contactList:
+            text = contact.__str__()
+            file.write(str(text) + "\n")
+        file.close()
+    
             
 def main():
     print("Enter a number to choose the action you wish to perform: \n",
@@ -67,107 +161,67 @@ def main():
           "2 - Remove contact \n",
           "3 - Update contact \n",
           "4 - Set up a birthday reminder \n",
-          "5 - Export contact to a .txt file \n",
+          "5 - Export contacts to a .txt file \n",
           "6 - Export contact to a .csv file")
     number = int(input("Number: "))
-    # dictionaries to store all types of contacts
+    
+    # lists to store all types of contacts
     family = []
     friends = []
     work = []
     others = []
+    
     while True:
-        if(number == 1):
+        if(number == 1): #create new contact
             contactType = input("What type of contact do you wish to add? (family, friend, work or other):")
             if(contactType == "family"):
-                print("Enter the following: ")
-                name = input("Enter name: ")
-                number = input("Enter number: ")
-                birth = input("Enter birthdate: ")
-                melody = selectMelody()
-                mail = input("Enter email address: ")
-                familyContact = Family(name,number,birth,melody,mail)
-                familyRole = input("Family member: ")
-                familyContact.setMember(familyRole)
-                address = input("Home adress: ")
-                familyContact.setAddress(address)
-                family.append(familyContact)
-                
+                createContactFamily(family)  
             elif(contactType == "friend"):
-                print("Enter the following: ")
-                name = input("Enter name: ")
-                number = input("Enter number: ")
-                birth = input("Enter birthdate: ")
-                melody = selectMelody()
-                mail = input("Enter email address: ")
-                friendContact = Friend(name, number, birth, melody, mail)
-                address = ("Enter address: ")
-                friendContact.setAddress(address)
-                
+                createContactFriend(friends)
             elif(contactType == "work"):
-                print("Enter the following: ")
-                name = input("Enter name: ")
-                number = input("Enter number: ")
-                birth = input("Enter birthdate: ")
-                melody = selectMelody()
-                mail = input("Enter email address: ")
-                workContact = Work(name, number, birth, melody, mail)
-                company = input("Enter company name: ")
-                workContact.setCompany(company)
-                job = input("Enter position at company: ")
-                workContact.setJob(job)
-                work.append(workContact)
-                
+                createContactWork(work)
             elif(contactType == "other"):
-                print("Enter the following: ")
-                name = input("Enter name: ")
-                number = input("Enter number: ")
-                birth = input("Enter birthdate: ")
-                melody = selectMelody()
-                mail = input("Enter email address: ")
-                contact = Contact(name, number, birth, melody, mail)
-                other.append(contact)
+                createContactOther(others)
             else:
-                contactType = input("Wrong type! Enter again: ")
+                print("Wrong type!")
                 
-        elif(number == 2):
-            contactType = input("What type of contact do you wish to delete?: ")
-            if (contactType == "family"):
-                name = input("Enter name of the contact you wish to delete: ")
-                for contact in family:
-                    currentName = contact.getName()
-                    if(currentName == name):
-                        del contact
+        elif(number == 2): #delete existing contact
+            contactType = input("What type of contact do you wish to delete? (family, friend, work or other): ")
+            if(contactType == "family"):
+                deleteContact(family)
             elif(contactType == "friend"):
-                name = input("Enter name of the contact you wish to delete: ")
-                for contact in friends:
-                    currentName = contact.getName()
-                    if(currentName == name):
-                        del contact
+                deleteContact(friends)
             elif(contactType == "work"):
-                name = input("Enter name of the contact you wish to delete: ")
-                for contact in work:
-                    currentName = contact.getName()
-                    if(currentName == name):
-                        del contact
+                deleteContact(work)
             elif(contactType == "other"):
-                name = input("Enter name of the contact you wish to delete: ")
-                for contact in others:
-                    currentName = contact.getName()
-                    if(currentName == name):
-                        del contact
+                deleteContact(others)
             else:
-                contactType = input("Wrong type! Enter again: ")
+                print("Wrong type!")
                 
         elif(number == 3):
             pass
+        
         elif(number == 4):
             pass
-        elif(number == 5):
-            pass
+        
+        elif(number == 5): #print all contacts from list to .txt
+            contactType = input("Which contacts do you wish to export to a .txt? (family, friend, work or other): ")
+            if(contactType == "family"):
+                printTxt(family, contactType)
+            elif(contactType == "friend"):
+                printTxt(friends, contactType)
+            elif(contactType == "work"):
+                printTxt(work, contactType)
+            elif(contactType == "other"):
+                printTxt(others, contactType)
+            else:
+                print("Wrong type!")
+                
         elif(number == 6):
             pass
+        
         else:
-            print("Wrong input! Enter another action.")
+            print("Wrong input!")
         answer = input("Enter another action? (yes/no): ")
         if(answer == 'yes'):
             number = int(input("Number: "))
