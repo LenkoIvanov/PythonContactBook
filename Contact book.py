@@ -303,7 +303,40 @@ def update_Other(otherList):
                 newMail = input("Enter new email: ")
                 contact.setMail(newMail)
             else:
-                to_update = input("Wrong input! Enter again: ")    
+                to_update = input("Wrong input! Enter again: ")
+
+def export_csv_family(familyList,familyDict):
+    for contact in familyList:
+        name = contact.getName()
+        number = contact.getNumber()
+        birth = contact.getBirth()
+        melody = contact.getMelody()
+        mail = contact.getMail()
+        member = contact.getMember()
+        address = contact.getAddress()
+        familyDict["Name"] = name
+        familyDict["Number"] = number
+        familyDict["Birth"] = birth
+        familyDict["Melody"] = melody
+        familyDict["Mail"] = mail
+        familyDict["Member"] = member
+        familyDict["Address"] = address
+
+    with open("Family.csv",mode="w") as family_file:
+        fieldnames = ["Name", "Number", "Birth", "Melody", "Mail", "Member", "Address"]
+        writer = csv.DictWriter(family_file, fieldnames = fieldnames)
+        writer.writeheader()
+        writer.writerow(familyDict)
+            
+def import_csv_family(list_dicts): #works for only last rows
+    family_file = open("Family.csv",mode="r")
+    data = csv.DictReader(family_file)
+    list_dicts = list(data)
+    family_file.close()
+    
+
+
+           
 def main():
     print("Enter a number to choose the action you wish to perform: \n",
           "1 - Add contact \n",
@@ -326,6 +359,9 @@ def main():
     friends_dict = {}
     work_dict = {}
     basic_dict = {}
+
+    #list of dictionaries
+    family_dict_list = []
     
     while True:
         if(number == 1): #create new contact
@@ -392,11 +428,23 @@ def main():
                 print("Wrong type!")
                 
         elif(number == 6): #export to .csv file
-            pass
+            export_csv_family(family,family_dict)
         
         elif(number == 7): #import from .csv file
-            pass
-        
+            import_csv_family(family_dict_list)
+            for every_dict in family_dict_list :
+                name = every_dict.get("Name")
+                number = every_dict.get("Number")
+                birth = every_dict.get("Birth")
+                melody = every_dict.get("Melody")
+                mail = every_dict.get("Mail")
+                member = every_dict.get("Member")
+                address = every_dict.get("Address")
+                familyContact = Family(name,number,birth,melody,mail)
+                familyContact.setMember(member)
+                familyContact.setAddress(address)
+                family.append(familyContact)
+                
         else:
             print("Wrong input!")
         answer = input("Enter another action? (yes/no): ")
