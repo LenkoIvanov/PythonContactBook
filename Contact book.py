@@ -10,10 +10,26 @@ class Contact: #class for basic contacts
         self.__mail = mail #personal email
     def getName(self):
         return self.__name
+    def setName(self,name):
+        self.__name = name
+    def getNumber(self):
+        return self.__number
+    def setNumber(self,number):
+        self.__number = number
     def getBirth(self):
         return self.__birth
+    def setBirth(self,birth):
+        self.__birth = birth
+    def getMelody(self):
+        return self.__melody
+    def setMelody(self,melody):
+        self.__melody = melody
+    def getMail(self):
+        return self.__mail
+    def setMail(self,mail):
+        self.__mail = mail
     def __str__(self):
-        return "Name: " + self.__name + " Number: " + self.__number + " Email: " + self.__mail
+        return "Name: " + self.__name + " Number: " + self.__number + " Email: " + self.__mail + " Birth: " + self.__birth
 
 class Family(Contact): #class for family contacts
     def __init__(self, name, number, birth, melody, mail):
@@ -96,7 +112,7 @@ def createContactFriend(contactList):
     melody = selectMelody()
     mail = input("Enter email address: ")
     friendContact = Friend(name, number, birth, melody, mail)
-    address = ("Enter address: ")
+    address = input("Enter address: ")
     friendContact.setAddress(address)
     contactList.append(friendContact)
     
@@ -177,7 +193,117 @@ def remindBirthday(contactList):
                 print(name + " has a birthday today!")
             else:
                 print(name + " does not have a birthday today.")
-                  
+
+def update_Family(familyList):
+    name_to_update = input("Enter name of contact you wish to update: ")
+    to_update = input("Which attribute do you wish to update? (name,number,birth,melody,mail,member or address):")
+    for contact in familyList:
+        currentName = contact.getName()
+        if(currentName == name_to_update):
+            if(to_update == "name"):
+                newName = input("Enter new name: ")
+                contact.setName(newName)
+            elif(to_update == "number"):
+                newNumber = input("Enter new number: ")
+                contact.setNumber(newNumber)
+            elif(to_update == "birth"):
+                newBirth = input("Enter new birthday: ")
+                contact.setBirth(newBirth)
+            elif(to_update == "melody"):
+                newMelody = selectMelody()
+                contact.setMelody(newMelody)
+            elif(to_update == "mail"):
+                newMail = input("Enter new email: ")
+                contact.setMail(newMail)
+            elif(to_update == "member"):
+                newMember = input("Enter new family member status: ")
+                contact.setMember(newMember)
+            elif(to_update == "address"):
+                newAddress = input("Enter new address: ")
+                contact.setAddress(newAddress)
+            else:
+                to_update = input("Wrong input! Enter again: ")
+
+def update_Friend(friendList):
+    name_to_update = input("Enter name of contact you wish to update: ")
+    to_update = input("Which attribute do you wish to update? (name,number,birth,melody,mail or address):")
+    for contact in friendList:
+        currentName = contact.getName()
+        if(currentName == name_to_update):
+            if(to_update == "name"):
+                newName = input("Enter new name: ")
+                contact.setName(newName)
+            elif(to_update == "number"):
+                newNumber = input("Enter new number: ")
+                contact.setNumber(newNumber)
+            elif(to_update == "birth"):
+                newBirth = input("Enter new birthday: ")
+                contact.setBirth(newBirth)
+            elif(to_update == "melody"):
+                newMelody = selectMelody()
+                contact.setMelody(newMelody)
+            elif(to_update == "mail"):
+                newMail = input("Enter new email: ")
+                contact.setMail(newMail)
+            elif(to_update == "address"):
+                newAddress = input("Enter new address: ")
+                contact.setAddress(newAddress)
+            else:
+                to_update = input("Wrong input! Enter again: ")
+                
+def update_Work(workList):
+    name_to_update = input("Enter name of contact you wish to update: ")
+    to_update = input("Which attribute do you wish to update? (name,number,birth,melody,mail,company or position):")
+    for contact in workList:
+        currentName = contact.getName()
+        if(currentName == name_to_update):
+            if(to_update == "name"):
+                newName = input("Enter new name: ")
+                contact.setName(newName)
+            elif(to_update == "number"):
+                newNumber = input("Enter new number: ")
+                contact.setNumber(newNumber)
+            elif(to_update == "birth"):
+                newBirth = input("Enter new birthday: ")
+                contact.setBirth(newBirth)
+            elif(to_update == "melody"):
+                newMelody = selectMelody()
+                contact.setMelody(newMelody)
+            elif(to_update == "mail"):
+                newMail = input("Enter new email: ")
+                contact.setMail(newMail)
+            elif(to_update == "company"):
+                newCompany = input("Enter new company: ")
+                contact.setCompany(newCompany)
+            elif(to_update == "position"):
+                newPosition = input("Enter new position: ")
+                contact.setJob(newPosition)
+            else:
+                to_update = input("Wrong input! Enter again: ")
+
+def update_Other(otherList):
+    name_to_update = input("Enter name of contact you wish to update: ")
+    to_update = input("Which attribute do you wish to update? (name,number,birth,melody or mail):")
+    for contact in otherList:
+        currentName = contact.getName()
+        if(currentName == name_to_update):
+            if(to_update == "name"):
+                newName = input("Enter new name: ")
+                contact.setName(newName)
+            elif(to_update == "number"):
+                newNumber = input("Enter new number: ")
+                contact.setNumber(newNumber)
+            elif(to_update == "birth"):
+                newBirth = input("Enter new birthday: ")
+                contact.setBirth(newBirth)
+            elif(to_update == "melody"):
+                newMelody = selectMelody()
+                contact.setMelody(newMelody)
+            elif(to_update == "mail"):
+                newMail = input("Enter new email: ")
+                contact.setMail(newMail)
+            else:
+                to_update = input("Wrong input! Enter again: ")    
 def main():
     print("Enter a number to choose the action you wish to perform: \n",
           "1 - Add contact \n",
@@ -189,11 +315,17 @@ def main():
           "7 - Import contacts from a .csv file")
     number = int(input("Number: "))
     
-    # lists to store all types of contacts
+    # lists to store object instances of contacts
     family = []
     friends = []
     work = []
     others = []
+
+    #dictionaries for storing contact-specific information
+    family_dict = {}
+    friends_dict = {}
+    work_dict = {}
+    basic_dict = {}
     
     while True:
         if(number == 1): #create new contact
@@ -223,7 +355,17 @@ def main():
                 print("Wrong type!")
                 
         elif(number == 3): #info update
-            pass
+            contactType = input("What type of contact do you wish to update? (family,friend,work or other): ")
+            if(contactType == "family"):
+                update_Family(family)
+            elif(contactType == "friend"):
+                update_Friend(friends)
+            elif(contactType == "work"):
+                update_Work(work)
+            elif(contactType == "other"):
+                update_Other(others)
+            else:
+                print("Wrong type!")
         
         elif(number == 4): #birthday reminders
             contactType = input("Which contacts do you wish to check for a birthday? (family, friend, work or other): ")
