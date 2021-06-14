@@ -306,31 +306,94 @@ def update_Other(otherList):
                 to_update = input("Wrong input! Enter again: ")
 
 def export_csv_family(familyList,familyDict):
-    for contact in familyList:
-        name = contact.getName()
-        number = contact.getNumber()
-        birth = contact.getBirth()
-        melody = contact.getMelody()
-        mail = contact.getMail()
-        member = contact.getMember()
-        address = contact.getAddress()
-        familyDict["Name"] = name
-        familyDict["Number"] = number
-        familyDict["Birth"] = birth
-        familyDict["Melody"] = melody
-        familyDict["Mail"] = mail
-        familyDict["Member"] = member
-        familyDict["Address"] = address
-
     with open("Family.csv",mode="w") as family_file:
         fieldnames = ["Name", "Number", "Birth", "Melody", "Mail", "Member", "Address"]
         writer = csv.DictWriter(family_file, fieldnames = fieldnames)
         writer.writeheader()
-        writer.writerow(familyDict)
+        for contact in familyList:
+            name = contact.getName()
+            number = contact.getNumber()
+            birth = contact.getBirth()
+            melody = contact.getMelody()
+            mail = contact.getMail()
+            member = contact.getMember()
+            address = contact.getAddress()
+            familyDict["Name"] = name
+            familyDict["Number"] = number
+            familyDict["Birth"] = birth
+            familyDict["Melody"] = melody
+            familyDict["Mail"] = mail
+            familyDict["Member"] = member
+            familyDict["Address"] = address
+            writer = csv.DictWriter(family_file, fieldnames = fieldnames)
+            writer.writerow(familyDict)
+            
+def export_csv_friends(friendList,friendDict):
+    with open("Friends.csv",mode="w") as friend_file:
+        fieldnames = ["Name", "Number", "Birth", "Melody", "Mail", "Address"]
+        writer = csv.DictWriter(friend_file, fieldnames = fieldnames)
+        writer.writeheader()
+        for contact in friendList:
+            name = contact.getName()
+            number = contact.getNumber()
+            birth = contact.getBirth()
+            melody = contact.getMelody()
+            mail = contact.getMail()
+            address = contact.getAddress()
+            friendDict["Name"] = name
+            friendDict["Number"] = number
+            friendDict["Birth"] = birth
+            friendDict["Melody"] = melody
+            friendDict["Mail"] = mail
+            friendDict["Address"] = address
+            writer = csv.DictWriter(friend_file, fieldnames = fieldnames)
+            writer.writerow(friendDict)
+            
+def export_csv_work(workList,workDict):
+    with open("Work.csv",mode="w") as work_file:
+        fieldnames = ["Name", "Number", "Birth", "Melody", "Mail", "Company", "Position"]
+        writer = csv.DictWriter(work_file, fieldnames = fieldnames)
+        writer.writeheader()
+        for contact in workList:
+            name = contact.getName()
+            number = contact.getNumber()
+            birth = contact.getBirth()
+            melody = contact.getMelody()
+            mail = contact.getMail()
+            company = contact.getCompany()
+            position = contact.getJob()
+            workDict["Name"] = name
+            workDict["Number"] = number
+            workDict["Birth"] = birth
+            workDict["Melody"] = melody
+            workDict["Mail"] = mail
+            workDict["Company"] = company
+            workDict["Position"] = position
+            writer = csv.DictWriter(work_file, fieldnames = fieldnames)
+            writer.writerow(workDict)
+            
+def export_csv_others(otherList,otherDict):
+    with open("Others.csv",mode="w") as other_file:
+        fieldnames = ["Name", "Number", "Birth", "Melody", "Mail"]
+        writer = csv.DictWriter(other_file, fieldnames = fieldnames)
+        writer.writeheader()
+        for contact in otherList:
+            name = contact.getName()
+            number = contact.getNumber()
+            birth = contact.getBirth()
+            melody = contact.getMelody()
+            mail = contact.getMail()
+            otherDict["Name"] = name
+            otherDict["Number"] = number
+            otherDict["Birth"] = birth
+            otherDict["Melody"] = melody
+            otherDict["Mail"] = mail
+            writer = csv.DictWriter(other_file, fieldnames = fieldnames)
+            writer.writerow(otherDict)
             
 def import_csv_family(list_dicts): #works for only last rows
     family_file = open("Family.csv",mode="r")
-    data = csv.DictReader(family_file)
+    data = csv.DictReader(family_file, quoting = QUOTE_NONE)
     list_dicts = list(data)
     family_file.close()
     
@@ -358,7 +421,7 @@ def main():
     family_dict = {}
     friends_dict = {}
     work_dict = {}
-    basic_dict = {}
+    other_dict = {}
 
     #list of dictionaries
     family_dict_list = []
@@ -415,20 +478,30 @@ def main():
                 remindBirthday(others)
                 
         elif(number == 5): #print all contacts from list to .txt
-            contactType = input("Which contacts do you wish to export to a .txt? (family, friend, work or other): ")
+            contactType = input("Which contacts do you wish to export to a .txt? (family, friends, work or others): ")
             if(contactType == "family"):
                 printTxt(family, contactType)
-            elif(contactType == "friend"):
+            elif(contactType == "friends"):
                 printTxt(friends, contactType)
             elif(contactType == "work"):
                 printTxt(work, contactType)
-            elif(contactType == "other"):
+            elif(contactType == "others"):
                 printTxt(others, contactType)
             else:
                 print("Wrong type!")
                 
         elif(number == 6): #export to .csv file
-            export_csv_family(family,family_dict)
+            contactType = input("Which contacts do you wish to export to a .csv? (family, friends, work or others): ")
+            if(contactType == "family"):
+                export_csv_family(family,family_dict)
+            elif(contactType == "friends"):
+                export_csv_friends(friends,friends_dict)
+            elif(contactType == "work"):
+                export_csv_work(work,work_dict)
+            elif(contactType == "others"):
+                export_csv_others(others,other_dict)
+            else:
+                print("Wrong type!")
         
         elif(number == 7): #import from .csv file
             import_csv_family(family_dict_list)
