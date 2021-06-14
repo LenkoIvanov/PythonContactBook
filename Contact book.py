@@ -1,5 +1,7 @@
 import csv
 from datetime import date
+from csv import DictReader
+from os import path
 
 class Contact: #class for basic contacts
     def __init__(self, name, number, birth, melody, mail):
@@ -391,15 +393,76 @@ def export_csv_others(otherList,otherDict):
             writer = csv.DictWriter(other_file, fieldnames = fieldnames)
             writer.writerow(otherDict)
             
-def import_csv_family(list_dicts): #works for only last rows
-    family_file = open("Family.csv",mode="r")
-    data = csv.DictReader(family_file, quoting = QUOTE_NONE)
-    list_dicts = list(data)
-    family_file.close()
-    
+def import_csv_family(familyList):
+    if (path.exists("Family.csv")):
+        with open("Family.csv", mode = "r") as family_file:
+            reader = DictReader(family_file)
+            for row in reader:
+                name = row.get("Name")
+                number = row.get("Number")
+                birth = row.get("Birth")
+                melody = row.get("Melody")
+                mail = row.get("Mail")
+                member = row.get("Member")
+                address = row.get("Address")
+                familyContact = Family(name,number,birth,melody,mail)
+                familyContact.setMember(member)
+                familyContact.setAddress(address)
+                familyList.append(familyContact)
+    else:
+        print("File does not exist!")
 
+def import_csv_friends(friendList):
+    if (path.exists("Friends.csv")):
+        with open("Friends.csv", mode = "r") as friends_file:
+            reader = DictReader(friends_file)
+            for row in reader:
+                name = row.get("Name")
+                number = row.get("Number")
+                birth = row.get("Birth")
+                melody = row.get("Melody")
+                mail = row.get("Mail")
+                address = row.get("Address")
+                friendContact = Friend(name,number,birth,melody,mail)
+                friendContact.setAddress(address)
+                friendList.append(friendContact)
+    else:
+        print("File does not exist!")
+        
+def import_csv_work(workList):
+    if (path.exists("Work.csv")):
+        with open("Work.csv", mode = "r") as work_file:
+            reader = DictReader(work_file)
+            for row in reader:
+                name = row.get("Name")
+                number = row.get("Number")
+                birth = row.get("Birth")
+                melody = row.get("Melody")
+                mail = row.get("Mail")
+                company = row.get("Company")
+                position = row.get("Position")
+                workContact = Work(name,number,birth,melody,mail)
+                workContact.setCompany(company)
+                workContact.setJob(position)
+                workList.append(workContact)
+    else:
+        print("File does not exists!")
+        
+def import_csv_others(contactList):
+    if (path.exists("Others.csv")):
+        with open("Others.csv", mode = "r") as other_file:
+            reader = DictReader(other_file)
+            for row in reader:
+                name = row.get("Name")
+                number = row.get("Number")
+                birth = row.get("Birth")
+                melody = row.get("Melody")
+                mail = row.get("Mail")
+                otherContact = Contact(name,number,birth,melody,mail)
+                contactList.append(otherContact)
+    else:
+        print("File does not exist!")
 
-           
 def main():
     print("Enter a number to choose the action you wish to perform: \n",
           "1 - Add contact \n",
@@ -423,8 +486,6 @@ def main():
     work_dict = {}
     other_dict = {}
 
-    #list of dictionaries
-    family_dict_list = []
     
     while True:
         if(number == 1): #create new contact
@@ -476,6 +537,8 @@ def main():
                 remindBirthday(work)
             elif(contactType == "other"):
                 remindBirthday(others)
+            else:
+                print("Wrong type!")
                 
         elif(number == 5): #print all contacts from list to .txt
             contactType = input("Which contacts do you wish to export to a .txt? (family, friends, work or others): ")
@@ -504,19 +567,18 @@ def main():
                 print("Wrong type!")
         
         elif(number == 7): #import from .csv file
-            import_csv_family(family_dict_list)
-            for every_dict in family_dict_list :
-                name = every_dict.get("Name")
-                number = every_dict.get("Number")
-                birth = every_dict.get("Birth")
-                melody = every_dict.get("Melody")
-                mail = every_dict.get("Mail")
-                member = every_dict.get("Member")
-                address = every_dict.get("Address")
-                familyContact = Family(name,number,birth,melody,mail)
-                familyContact.setMember(member)
-                familyContact.setAddress(address)
-                family.append(familyContact)
+            print("Please check if a .csv file named Family,Friends,Work or Others exists!")
+            contactType = input("What type of contacts do you wish to import from a .csv file? (family, friends, work or others): ")
+            if(contactType == "family"):
+                import_csv_family(family)
+            elif(contactType == "friends"):
+                import_csv_friends(friends)
+            elif(contactType == "work"):
+                import_csv_work(work)
+            elif(contactType == "others"):
+                import_csv_others(others)
+            else:
+                print("Wrong type!")
                 
         else:
             print("Wrong input!")
